@@ -15,11 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Set;
 
 @Slf4j
-@AllArgsConstructor
+//@AllArgsConstructor
 public class ShiroRealm extends AuthorizingRealm {
 
-
-    private final ISysUserService sysUserService;
+    @Autowired
+    private ISysUserService sysUserService;
 
     /**
      * 用户授权

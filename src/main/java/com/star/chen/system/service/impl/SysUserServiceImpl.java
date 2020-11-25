@@ -6,6 +6,7 @@ import com.star.chen.system.service.ISysUserService;
 import com.star.chen.system.vo.UserVo;
 import com.star.common.util.PageBean;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,10 +14,11 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-@AllArgsConstructor
+//@AllArgsConstructor
 public class SysUserServiceImpl implements ISysUserService {
 
-    private final SysUserMapper sysUserMapper;
+    @Autowired
+    private SysUserMapper sysUserMapper;
 
     @Override
     public Set<String> selectPermissions(String username) {
@@ -38,7 +40,6 @@ public class SysUserServiceImpl implements ISysUserService {
         return sysUserMapper.selectRoles(username);
     }
 
-    @Transactional
     @Override
     public int updateUserPwd(SysUser user) {
         return sysUserMapper.updateUserPwd(user);

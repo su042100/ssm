@@ -42,13 +42,13 @@ public interface ISysUserService {
      * @param username 用户
      * @return 角色集合
      */
-    Set<String> selectRoles(@Param("username") String username);
+    Set<String> selectRoles(String username);
 
     /**
      * 根据用户名找到对应的权限
      * @param username 用户名
      * @return 权限集合
      */
-    Set<String> selectPermissions(@Param("username") String username);
+    Set<String> selectPermissions(String username);
 
 }

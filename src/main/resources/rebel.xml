@@ -6,16 +6,16 @@
 -->
 <application generated-by="intellij" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.zeroturnaround.com" xsi:schemaLocation="http://www.zeroturnaround.com http://update.zeroturnaround.com/jrebel/rebel-2_3.xsd">
 
-	<id>ssm</id>
+	<id>blue_cloud_erp</id>
 
 	<classpath>
-		<dir name="D:/softWare/IDEA/workspace/SSM/ssm/target/classes">
+		<dir name="D:/softWare/IDEA/workspace/blue_cloud_erp/target/classes">
 		</dir>
 	</classpath>
 
 	<web>
 		<link target="/">
-			<dir name="D:/softWare/IDEA/workspace/SSM/ssm/src/main/webapp">
+			<dir name="D:/softWare/IDEA/workspace/blue_cloud_erp/src/main/webapp">
 			</dir>
 		</link>
 	</web>
