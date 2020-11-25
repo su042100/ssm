@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.star.chen.system.mapper.SysUserMapper">
+    <resultMap id="BaseResultMap" type="com.star.chen.system.model.SysUser">
+        <constructor>
+            <idArg column="emp_id" jdbcType="BIGINT" javaType="java.lang.Long"/>
+            <arg column="emp_USERNAME" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="emp_PWD" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="emp_salt" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="emp_NAME" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="emp_GENDER" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="emp_EMAIL" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="emp_TELE" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="emp_ADDRESS" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="emp_BIRTHDAY" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="emp_DEPUUID" jdbcType="BIGINT" javaType="java.lang.Long"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="baseResultShow" type="com.star.chen.system.model.SysUser" extends="BaseResultMap">
+        <collection property="dept" ofType="com.star.chen.system.model.Dept">
+            <id column="dep_uuid" property="depId"/>
+            <result column="dep_name" property="depName"/>
+        </collection>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    emp_id, emp_USERNAME, emp_PWD, emp_salt, emp_NAME, emp_GENDER, emp_EMAIL, emp_TELE, 
+    emp_ADDRESS, emp_BIRTHDAY, emp_DEPUUID
+  </sql>
+    <sql id="base_query_list">
+        select mp.*,ep.dep_NAME from emp mp left join dep ep on mp.emp_DEPUUID = ep.dep_id
+        where  1=1
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from emp
+        where emp_id = #{empId,jdbcType=BIGINT}
+    </select>
+    <select id="selectUserByUsername" resultType="com.star.chen.system.model.SysUser">
+        select
+        <include refid="Base_Column_List"/>
+        from emp where emp_USERNAME = #{username}
+    </select>
+    <select id="queryListSysUserPager"
+            resultMap="baseResultShow">
+        <include refid="base_query_list"/>
+        <if test="null != empName">
+            and ep.emp_name = #{empName}
+        </if>
+        <if test="null != deptId">
+            and mp.emp_DEPUUID = #{deptId}
+        </if>
+        <if test="null != dateStart and null != dateEnd">
+            and emp_BIRTHDAY between #{dateStart} and #{dateEnd};
+        </if>
+    </select>
+    <select id="selectUsersAll" resultType="com.star.chen.system.vo.UserVo">
+        <include refid="base_query_list"/>
+    </select>
+    <select id="selectRoles" resultType="java.lang.String">
+    select rl.role_name from emp mp left join dep ep on mp.emp_DEPUUID = ep.dep_id left join emp_role er on mp.emp_id = er.EMPUUID left join role rl on er.ROLEUUID = rl.role_id
+    where 1=1
+    and mp.emp_USERNAME = #{username}
+  </select>
+    <select id="selectPermissions" resultType="java.lang.String">
+        select distinct tp.permission from emp mp left join emp_role er on mp.emp_id = er.EMPUUID left join role rl on
+        er.ROLEUUID = rl.role_id
+        left join role_permissions rp on rl.role_id = rp.ROLEUUID left join t_permissions tp on rp.MENUUUID = tp.MENUID
+        where 1=1
+        and mp.emp_USERNAME = #{username}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from emp
+    where emp_id = #{empId,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.star.chen.system.model.SysUser">
+    insert into emp (emp_id, emp_USERNAME, emp_PWD, 
+      emp_salt, emp_NAME, emp_GENDER, 
+      emp_EMAIL, emp_TELE, emp_ADDRESS, 
+      emp_BIRTHDAY, emp_DEPUUID)
+    values (#{empId,jdbcType=BIGINT}, #{empUsername,jdbcType=VARCHAR}, #{empPwd,jdbcType=VARCHAR}, 
+      #{empSalt,jdbcType=VARCHAR}, #{empName,jdbcType=VARCHAR}, #{empGender,jdbcType=VARCHAR}, 
+      #{empEmail,jdbcType=VARCHAR}, #{empTele,jdbcType=VARCHAR}, #{empAddress,jdbcType=VARCHAR}, 
+      #{empBirthday,jdbcType=TIMESTAMP}, #{empDepuuid,jdbcType=BIGINT})
+  </insert>
+    <insert id="insertSelective" parameterType="com.star.chen.system.model.SysUser">
+        insert into emp
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="empId != null">
+                emp_id,
+            </if>
+            <if test="empUsername != null">
+                emp_USERNAME,
+            </if>
+            <if test="empPwd != null">
+                emp_PWD,
+            </if>
+            <if test="empSalt != null">
+                emp_salt,
+            </if>
+            <if test="empName != null">
+                emp_NAME,
+            </if>
+            <if test="empGender != null">
+                emp_GENDER,
+            </if>
+            <if test="empEmail != null">
+                emp_EMAIL,
+            </if>
+            <if test="empTele != null">
+                emp_TELE,
+            </if>
+            <if test="empAddress != null">
+                emp_ADDRESS,
+            </if>
+            <if test="empBirthday != null">
+                emp_BIRTHDAY,
+            </if>
+            <if test="empDepuuid != null">
+                emp_DEPUUID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="empId != null">
+                #{empId,jdbcType=BIGINT},
+            </if>
+            <if test="empUsername != null">
+                #{empUsername,jdbcType=VARCHAR},
+            </if>
+            <if test="empPwd != null">
+                #{empPwd,jdbcType=VARCHAR},
+            </if>
+            <if test="empSalt != null">
+                #{empSalt,jdbcType=VARCHAR},
+            </if>
+            <if test="empName != null">
+                #{empName,jdbcType=VARCHAR},
+            </if>
+            <if test="empGender != null">
+                #{empGender,jdbcType=VARCHAR},
+            </if>
+            <if test="empEmail != null">
+                #{empEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="empTele != null">
+                #{empTele,jdbcType=VARCHAR},
+            </if>
+            <if test="empAddress != null">
+                #{empAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="empBirthday != null">
+                #{empBirthday,jdbcType=TIMESTAMP},
+            </if>
+            <if test="empDepuuid != null">
+                #{empDepuuid,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.star.chen.system.model.SysUser">
+        update emp
+        <set>
+            <if test="empUsername != null">
+                emp_USERNAME = #{empUsername,jdbcType=VARCHAR},
+            </if>
+            <if test="empPwd != null">
+                emp_PWD = #{empPwd,jdbcType=VARCHAR},
+            </if>
+            <if test="empSalt != null">
+                emp_salt = #{empSalt,jdbcType=VARCHAR},
+            </if>
+            <if test="empName != null">
+                emp_NAME = #{empName,jdbcType=VARCHAR},
+            </if>
+            <if test="empGender != null">
+                emp_GENDER = #{empGender,jdbcType=VARCHAR},
+            </if>
+            <if test="empEmail != null">
+                emp_EMAIL = #{empEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="empTele != null">
+                emp_TELE = #{empTele,jdbcType=VARCHAR},
+            </if>
+            <if test="empAddress != null">
+                emp_ADDRESS = #{empAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="empBirthday != null">
+                emp_BIRTHDAY = #{empBirthday,jdbcType=TIMESTAMP},
+            </if>
+            <if test="empDepuuid != null">
+                emp_DEPUUID = #{empDepuuid,jdbcType=BIGINT},
+            </if>
+        </set>
+        where emp_id = #{empId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.star.chen.system.model.SysUser">
+    update emp
+    set emp_USERNAME = #{empUsername,jdbcType=VARCHAR},
+      emp_PWD = #{empPwd,jdbcType=VARCHAR},
+      emp_salt = #{empSalt,jdbcType=VARCHAR},
+      emp_NAME = #{empName,jdbcType=VARCHAR},
+      emp_GENDER = #{empGender,jdbcType=VARCHAR},
+      emp_EMAIL = #{empEmail,jdbcType=VARCHAR},
+      emp_TELE = #{empTele,jdbcType=VARCHAR},
+      emp_ADDRESS = #{empAddress,jdbcType=VARCHAR},
+      emp_BIRTHDAY = #{empBirthday,jdbcType=TIMESTAMP},
+      emp_DEPUUID = #{empDepuuid,jdbcType=BIGINT}
+    where emp_id = #{empId,jdbcType=BIGINT}
+  </update>
+    <update id="updateUserPwd" parameterType="com.star.chen.system.model.SysUser">
+    update emp set emp_pwd= #{empPwd},emp_salt= #{empSalt} where emp_id = #{empId}
+  </update>
+</mapper>
