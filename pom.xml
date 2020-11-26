@@ -384,11 +384,11 @@
     </dependency>
 
     <!--********************hibernate-validator验证器************************-->
-    <dependency>
+   <!-- <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
       <version>6.0.7.Final</version>
-    </dependency>
+    </dependency>-->
 
   </dependencies>
 
